@@ -7,3 +7,4 @@ resource/
 .DS_Store
 app/.DS_Store
 app/config/development/*.php
+app/config/testing/*.php
