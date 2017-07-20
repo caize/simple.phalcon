@@ -13,7 +13,7 @@
 if (!function_exists('output_data')) {
     function output_data($code = 1, $msg = 'success', $data = [])
     {
-        if(!is_array($data) || empty($data)){
+        if(empty($data)){
             $data = new stdClass();
         }
 
@@ -27,7 +27,7 @@ if (!function_exists('output_data')) {
 if (!function_exists('response_data')) {
     function response_data($code = 1, $msg = 'success', $data = [])
     {
-        if(!is_array($data) || empty($data)){
+        if(empty($data)){
             $data = new stdClass();
         }
         $response = Phalcon\Di::getDefault()->getResponse();

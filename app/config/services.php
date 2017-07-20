@@ -11,25 +11,60 @@ use Phalcon\Cache\Frontend\Data as FrontendData;
 use Phalcon\Cache\Backend\Redis;
 
 /**
- * Shared configuration service
+ * 引入数据库配置信息
+ * 根据环境变量获取对应的数据库配置
  */
-$di->setShared('config', function () {
-    return include APP_PATH . "/config/config.php";
+$di->setShared('database_config', function () {
+    if(ENVIRONMENT == 'development'){
+        return include APP_PATH . "/config/development/database.php";
+    }else if(ENVIRONMENT == 'testing'){
+        return include APP_PATH . "/config/testing/database.php";
+    }else{
+        return include APP_PATH . "/config/database.php";
+    }
 });
-
 
 /**
  * 注册全局公用配置
+ * 根据环境变量获取对应配置信息
  */
 $di->setShared('commonConfig', function () {
-    return include APP_PATH . "/config/common.php";
+    if(ENVIRONMENT == 'development'){
+        return include APP_PATH . "/config/development/common.php";
+    }else{
+        return include APP_PATH . "/config/common.php";
+    }
 });
 
 /**
  * 注册支付回调逻辑方法
+ * 用户支付处理的逻辑
  */
 $di->setShared('pay_service', function () {
     return new \Services\PayService();
+});
+
+/**
+ * 开启redis缓存服务
+ */
+$di->set('redis_cache', function () {
+    $frontCache = new FrontendData(['lifetime' => 86400,]);
+    $redisConfig = \Phalcon\Di::getDefault()->get('database_config');
+    $cache = new Redis($frontCache, [
+        "host" => $redisConfig['redis']['host'],
+        "port" => $redisConfig['redis']['port'],
+        "auth" => $redisConfig['redis']['auth'],
+        "persistent" => false,
+        "index" => 0,
+    ]);
+    return $cache;
+});
+
+/**
+ * Shared configuration service
+ */
+$di->setShared('config', function () {
+    return include APP_PATH . "/config/config.php";
 });
 
 
@@ -87,6 +122,7 @@ $di->setShared('db', function () {
         'username' => $config->database->username,
         'password' => $config->database->password,
         'dbname' => $config->database->dbname,
+        'port'=>$config->database->port,
         'charset' => $config->database->charset
     ];
 
@@ -125,21 +161,5 @@ $di->set('flash', function () {
 $di->setShared('session', function () {
     $session = new SessionAdapter();
     $session->start();
-
     return $session;
-});
-
-/**
- * 开启模型缓存服务
- */
-$di->set('modelsCache', function () {
-    $frontCache = new FrontendData(['lifetime' => 86400,]);
-    $cache = new Redis($frontCache, [
-        "host" => "118.89.159.190",
-        "port" => 6379,
-        //"auth" => "foobared",
-        "persistent" => false,
-        "index" => 0,
-    ]);
-    return $cache;
 });
