@@ -1,0 +1,10 @@
+log/
+cache/
+.idea
+vendor/
+composer.lock
+resource/alipay/
+resource/wechat/
+resource/jwtauth/
+
+
