@@ -3,8 +3,8 @@ cache/
 .idea
 vendor/
 composer.lock
-resource/alipay/
-resource/wechat/
-resource/jwtauth/
+/resource/alipay/*
+/resource/wechat/*
+/resource/jwtauth/*
 .DS_Store
 app/.DS_Store
