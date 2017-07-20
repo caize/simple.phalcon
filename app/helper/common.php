@@ -27,11 +27,13 @@ if (!function_exists('output_data')) {
 if (!function_exists('response_data')) {
     function response_data($code = 1, $msg = 'success', $data = [])
     {
-        if(empty($data)){
+        if(empty($data) || (!is_array($data) && !is_object($data))){
             $data = new stdClass();
         }
         $response = Phalcon\Di::getDefault()->getResponse();
-        return $response->setJsonContent(compact('code', 'msg', 'data'));
+        $response->setJsonContent(compact('code', 'msg', 'data'));
+        $response->send();
+        die;
     }
 }
 

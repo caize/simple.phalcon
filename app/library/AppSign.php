@@ -29,7 +29,7 @@ class AppSign
         /** 获取post请求信息 */
         $data = Di::getDefault()->getRequest()->getPost();
         if(empty($data['sign']) || empty($data['timestamp'])){
-            return ['message' => '参数异常', 'code' => '-1', 'data' => []];
+            response_data(-1,'签名参数异常');
         }
         $sign_origin = $data['sign'];
         $timestamp = $data['timestamp'];
@@ -50,10 +50,10 @@ class AppSign
         $sign = strtoupper(md5($signStr));
         if ($sign_status) {
             if ($sign != $sign_origin) {
-                output_data(-1,'签名信息错误');
+                response_data(-1,'签名信息错误');
             }
             if ($timestamp < time() - $sign_expire) {
-                output_data(-1,'签名信息已过期');
+                response_data(-1,'签名信息已过期');
             }
         }
     }

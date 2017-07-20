@@ -22,12 +22,12 @@ class UploadController extends BaseController
         }
 
         if(!$file){
-            return response_data(-1,'文件不存在');
+            response_data(-1,'文件不存在');
         }
         $qiniu = new Qiniu();
         $key = $qiniu->upload('',$file);
         logMessage('qiniu')->log("$key");
-        return response_data(1,'Success',['key'=>$key]);
+        response_data(1,'Success',['key'=>$key]);
     }
 
 }

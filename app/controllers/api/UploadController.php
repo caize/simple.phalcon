@@ -21,7 +21,7 @@ class UploadController extends BaseController
         //$this->modelsCache->save("my-data", [1, 2, 3, 4, 5]);
         //var_dump($this->modelsCache->get('my-data'));
         $list = Model::fetchJoin([['a' => 'Models\VueAdmin'], ['Models\VueRole', 'a.role = b.id', 'b']], [], 'a.id,a.nickname,b.id as role_id,b.name as role_name', 'a.id desc');
-        return response_data(1,'success',$list);
+        response_data(1,'success',$list);
 
         $list = VueAdmin::fetchRows(['id'=>[1,2,3]],'id,username','id desc',5,1);
         return response_data(1,'success',$list);

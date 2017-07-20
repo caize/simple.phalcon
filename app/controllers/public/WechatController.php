@@ -30,7 +30,7 @@ class WechatController extends BaseController
             'notify_url'=>'e',
             'openid'=>'oUKCUxGItpAG74oms1iw386OrAbg',
         ]);
-        return response_data(1,'success',$res);
+        response_data(1,'success',$res);
     }
 
     public function transferAction()

@@ -9,6 +9,8 @@
 namespace Library;
 
 use Firebase\JWT\JWT;
+use Phalcon\Di;
+use Exception;
 
 class JwtAuth
 {
@@ -71,12 +73,22 @@ class JwtAuth
      */
     public function decode($jwt = '')
     {
-        if (self::$type == 'RS256') {
-            $data = JWT::decode($jwt, self::$publicKey, array(self::$type));
-        } else {
-            $data = JWT::decode($jwt, self::$jwtKey, array(self::$type));
+        try {
+            if (self::$type == 'RS256') {
+                $data = JWT::decode($jwt, self::$publicKey, array(self::$type));
+            } else {
+                $data = JWT::decode($jwt, self::$jwtKey, array(self::$type));
+            }
+            if(!is_array($data) && !is_object($data)){
+                throw new Exception('授权认证失败');
+            }else{
+                logMessage('jwt-auth')->log('授权成功----->'.json_encode($data));
+                return $data;
+            }
+        }catch (Exception $e){
+            logMessage('jwt-auth')->error('授权失败----->'.$jwt);
+            return false;
         }
-        return $data;
     }
 
 

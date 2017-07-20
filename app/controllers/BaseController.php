@@ -11,6 +11,7 @@ namespace Controllers;
 
 use Library\AppSign;
 use Library\WechatAuth;
+use Library\JwtAuth;
 
 class BaseController extends \Phalcon\Mvc\Controller
 {
@@ -27,7 +28,7 @@ class BaseController extends \Phalcon\Mvc\Controller
      */
     public function appSign()
     {
-        AppSign::check($this);
+        AppSign::check();
     }
 
     /**
@@ -38,7 +39,7 @@ class BaseController extends \Phalcon\Mvc\Controller
         $wechat = new WechatAuth();
         $info = $wechat->auth();
         if(empty($info->openid)){
-            output_data(-1,'微信授权失败');
+            response_data(-1,'微信授权失败');
         }
     }
 
@@ -48,6 +49,18 @@ class BaseController extends \Phalcon\Mvc\Controller
     public function checkToken()
     {
 
+    }
+
+    /**
+     * jwt-auth校验
+     */
+    public function jwtAuth()
+    {
+        $token = $_SERVER['HTTP_AUTHORIZATION'];
+        $info = JwtAuth::type()->decode($token);
+        var_dump($info);exit;
+        //var_dump($info);exit;
+        //return $info;
     }
 
     public function route404()
